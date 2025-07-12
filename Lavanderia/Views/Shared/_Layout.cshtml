@@ -1,0 +1,158 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@ViewBag.Title - My ASP.NET Application</title>
+
+    @Styles.Render("~/Content/css")
+    @RenderSection("Styles", required: false)
+
+    <style>
+        /* Variables de color */
+        :root {
+            --lavender-light: #9b59b6;
+            --lavender-dark: #8e44ad;
+            --lavender-hover: #6f42c1;
+            --white: #fff;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: white; /* Cambiado a blanco */
+        }
+
+
+        /* Sidebar vertical */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 220px;
+            height: 100vh;
+            background: var(--lavender-dark);
+            color: var(--white);
+            padding-top: 20px;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+            z-index: 1030;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar .navbar-brand {
+            padding-left: 1rem;
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 2rem;
+        }
+
+        .sidebar nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            flex-grow: 1;
+        }
+        .sidebar nav ul li a {
+            display: block;
+            padding: 12px 1.5rem;
+            color: var(--white);
+            text-decoration: none;
+        }
+        .sidebar nav ul li a:hover, .sidebar nav ul li a.active {
+            background: var(--lavender-hover);
+        }
+
+        .sidebar footer {
+            padding: 1rem;
+            font-size: 0.8rem;
+            text-align: center;
+            color: rgba(255,255,255,0.7);
+        }
+
+        /* Contenido principal con margen lateral para sidebar */
+        
+
+
+        /* Botón hamburguesa oculto por defecto */
+        .hamburger-btn {
+            display: none;
+        }
+
+        /* Media query para pantallas pequeñas */
+        @@media (max-width: 768px) {
+            .sidebar {
+                display: none;
+                width: 100%;
+                height: auto;
+                flex-direction: column;
+                position: relative;
+            }
+            .sidebar.show {
+                display: flex;
+            }
+            .main-content {
+                margin-left: 0 !important;
+            }
+            .hamburger-btn {
+                display: block;
+                position: fixed;
+                top: 10px;
+                left: 10px;
+                z-index: 1050;
+                background: transparent;
+                border: none;
+                color: var(--white);
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    @if (Session["UsuarioID"] != null)
+    {
+        <!-- Botón hamburguesa visible solo en móvil -->
+        <button class="hamburger-btn" onclick="toggleSidebar()">☰</button>
+
+        <aside class="sidebar" id="sidebar">
+            @Html.ActionLink("MissLavanda", "Index", "Home", null, new { @class = "navbar-brand" })
+
+            <nav>
+                <ul>
+                    <li>@Html.ActionLink("Cliente", "Index", "Cliente", null, new { @class = "nav-link" })</li>
+                    <li>@Html.ActionLink("Empleado", "Index", "Empleado", null, new { @class = "nav-link" })</li>
+                    <li>@Html.ActionLink("Distrito", "Index", "Distrito", null, new { @class = "nav-link" })</li>
+                    <li>@Html.ActionLink("Sucursal", "Index", "Sucursal", null, new { @class = "nav-link" })</li>
+                    <li>@Html.ActionLink("Rol", "Index", "Rol", null, new { @class = "nav-link" })</li>
+                    <li>@Html.ActionLink("Usuario", "Index", "Usuario", null, new { @class = "nav-link" })</li>
+                    <li>@Html.ActionLink("Boleta", "Create", "Boleta", null, new { @class = "nav-link" })</li>
+
+
+
+
+
+                </ul>
+            </nav>
+
+            <footer>&copy; @DateTime.Now.Year - My ASP.NET Application</footer>
+        </aside>
+    }
+
+    <div class="main-content @(Session["UsuarioID"] != null ? "" : "no-sidebar")">
+        <div class="container">
+            @RenderBody()
+        </div>
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+
+    <script>
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('show');
+        }
+    </script>
+</body>
+</html>

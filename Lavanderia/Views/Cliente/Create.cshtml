@@ -1,0 +1,90 @@
+﻿@model Lavanderia.Models.Boleta
+
+@{
+    ViewBag.Title = "Registrar Boleta";
+}
+
+<h2 style="text-align: center; margin-bottom: 30px;">Registrar Boleta</h2>
+
+@using (Html.BeginForm()) 
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-container">
+        <div class="form-group">
+            @Html.LabelFor(m => m.ClienteID)
+            @Html.TextBoxFor(m => m.ClienteID, new { @class = "form-control" })
+            @Html.ValidationMessageFor(m => m.ClienteID, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.EmpleadoID)
+            @Html.TextBoxFor(m => m.EmpleadoID, new { @class = "form-control" })
+            @Html.ValidationMessageFor(m => m.EmpleadoID, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.SucursalID)
+            @Html.TextBoxFor(m => m.SucursalID, new { @class = "form-control" })
+            @Html.ValidationMessageFor(m => m.SucursalID, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.FechaEmision)
+            @Html.TextBoxFor(m => m.FechaEmision, "{0:yyyy-MM-dd}", new { type = "date", @class = "form-control" })
+            @Html.ValidationMessageFor(m => m.FechaEmision, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.FechaEntrega)
+            @Html.TextBoxFor(m => m.FechaEntrega, "{0:yyyy-MM-dd}", new { type = "date", @class = "form-control" })
+            @Html.ValidationMessageFor(m => m.FechaEntrega, "", new { @class = "text-danger" })
+        </div>
+
+        <h3 style="margin-top: 30px;">Detalles</h3>
+        <div id="detalles">
+            @for (int i = 0; i < Model.Detalles.Count; i++)
+            {
+                <div class="form-row mb-3">
+                    @Html.TextBoxFor(m => m.Detalles[i].PrendaNombre, new { @class = "form-control mb-1", placeholder = "Prenda" })
+                    @Html.TextBoxFor(m => m.Detalles[i].TipoCobro, new { @class = "form-control mb-1", placeholder = "TipoCobro (kilo/unidad)" })
+                    @Html.TextBoxFor(m => m.Detalles[i].Peso, new { @class = "form-control mb-1", placeholder = "Peso" })
+                    @Html.TextBoxFor(m => m.Detalles[i].Precio, new { @class = "form-control", placeholder = "Precio" })
+                </div>
+            }
+        </div>
+
+        <button type="submit" class="btn btn-primary mt-3">Registrar Boleta</button>
+        @Html.ActionLink("Cancelar", "Index", null, new { @class = "btn btn-secondary ml-2 mt-3" })
+    </div>
+}
+
+@section Styles {
+    <style>
+        .form-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            max-width: 600px;
+            margin: 0 auto 40px auto;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-row {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-control {
+            width: 100%;
+        }
+
+        .text-danger {
+            color: red;
+        }
+    </style>
+}

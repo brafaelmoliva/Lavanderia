@@ -1,0 +1,50 @@
+﻿@model Lavanderia.Models.Sucursal
+
+@{
+    ViewBag.Title = "Nueva Sucursal";
+}
+
+<h2 style="text-align: center; margin-bottom: 30px;">Nueva Sucursal</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+<div class="form-container">
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.DistritoID)
+        @Html.DropDownListFor(m => m.DistritoID, (SelectList)ViewBag.Distritos, "Seleccione un distrito", new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.DistritoID, "", new { @class = "text-danger" })
+    </div>
+
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Nombre)
+        @Html.TextBoxFor(m => m.Nombre, new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.Nombre, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Direccion)
+        @Html.TextBoxFor(m => m.Direccion, new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.Direccion, "", new { @class = "text-danger" })
+    </div>
+
+    <button type="submit" class="btn btn-primary mt-3">Guardar</button>
+    @Html.ActionLink("Cancelar", "Index", null, new { @class = "btn btn-secondary ml-2 mt-3" })
+</div>
+}
+
+@section Styles {
+    <style>
+        .form-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            max-width: 600px;
+            margin: 0 auto 40px auto;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+    </style>
+}

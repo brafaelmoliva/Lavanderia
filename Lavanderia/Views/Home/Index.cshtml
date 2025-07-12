@@ -1,0 +1,33 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+    var rolUsuario = Session["Rol"] as string ?? "Usuario";
+}
+
+<style>
+    .home-centered-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: calc(100vh - 40px); /* 100% de altura visible menos algo de margen */
+    }
+
+    .welcome-message {
+        text-align: center;
+        padding: 2rem 3rem;
+        background:white; 
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(142, 68, 173, 0.6);
+        font-size: 2rem;
+        font-weight: 600;
+        color: black;
+    }
+</style>
+
+
+
+<div class="home-centered-wrapper">
+    <div class="welcome-message">
+        Bienvenido, @rolUsuario<br />
+        ¿Qué haremos hoy?
+    </div>
+</div>

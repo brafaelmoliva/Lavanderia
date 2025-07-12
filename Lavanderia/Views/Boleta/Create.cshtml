@@ -1,0 +1,105 @@
+﻿@model Lavanderia.Models.Boleta
+
+@{
+    ViewBag.Title = "Registrar Boleta";
+}
+
+<h2 style="text-align: center; margin-bottom: 30px;">Registrar Boleta</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+<div class="form-container">
+    <div class="form-group">
+        @Html.LabelFor(m => m.ClienteID)
+        @Html.DropDownListFor(m => m.ClienteID, (SelectList)ViewBag.Clientes, "-- Seleccione Cliente --", new { @class = "form-control" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.EmpleadoID)
+        @Html.DropDownListFor(m => m.EmpleadoID, (SelectList)ViewBag.Empleados, "-- Seleccione Empleado --", new { @class = "form-control" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.SucursalID)
+        @Html.DropDownListFor(m => m.SucursalID, (SelectList)ViewBag.Sucursales, "-- Seleccione Sucursal --", new { @class = "form-control" })
+    </div>
+
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.FechaEmision)
+        @Html.TextBoxFor(m => m.FechaEmision, "{0:yyyy-MM-dd}", new { type = "date", @class = "form-control" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.FechaEntrega)
+        @Html.TextBoxFor(m => m.FechaEntrega, "{0:yyyy-MM-dd}", new { type = "date", @class = "form-control" })
+    </div>
+
+    <h3 class="mt-4">Detalles</h3>
+    <div id="detalles-container" class="mb-3"></div>
+
+    <button type="button" class="btn btn-secondary mb-3" onclick="agregarDetalle()">Agregar Detalle</button>
+
+    <div>
+        <input type="submit" value="Registrar Boleta" class="btn btn-primary mt-2" />
+    </div>
+</div>
+}
+
+<!-- Template para clonar -->
+<div id="detalle-template" style="display: none;">
+    <div class="detalle-item border rounded p-3 mb-3">
+        <input name="__prefix__.PrendaNombre" placeholder="Prenda" class="form-control mb-2" />
+        <input name="__prefix__.TipoCobro" placeholder="TipoCobro (kilo/unidad)" class="form-control mb-2" />
+        <input name="__prefix__.Peso" placeholder="Peso" type="number" step="0.01" class="form-control mb-2" />
+        <input name="__prefix__.Precio" placeholder="Precio" type="number" step="0.01" class="form-control mb-2" />
+        <button type="button" class="btn btn-danger btn-sm" onclick="eliminarDetalle(this)">Quitar</button>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        let indice = 0;
+
+        function agregarDetalle() {
+            const plantilla = document.getElementById("detalle-template").innerHTML;
+            const nuevoHtml = plantilla.replace(/__prefix__/g, `Detalles[${indice}]`);
+            indice++;
+
+            const div = document.createElement("div");
+            div.innerHTML = nuevoHtml;
+            document.getElementById("detalles-container").appendChild(div);
+        }
+
+        function eliminarDetalle(btn) {
+            btn.closest(".detalle-item").remove();
+        }
+
+        window.onload = function () {
+            agregarDetalle();
+        };
+    </script>
+}
+
+@section Styles {
+    <style>
+        .form-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            max-width: 600px;
+            margin: 0 auto 40px auto;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .detalle-item input {
+            width: 100%;
+        }
+    </style>
+}

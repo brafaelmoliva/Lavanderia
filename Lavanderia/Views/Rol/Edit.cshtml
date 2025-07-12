@@ -1,0 +1,73 @@
+﻿@model Lavanderia.Models.Rol
+
+@{
+    ViewBag.Title = "Editar Rol";
+}
+
+<style>
+    .edit-container {
+        max-width: 600px;
+        margin: 40px auto;
+        background: white;
+        padding: 2rem;
+        border-radius: 12px;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    h2 {
+        text-align: center;
+        color: #6f42c1;
+        font-weight: bold;
+        margin-bottom: 1.5rem;
+    }
+
+    label {
+        font-weight: 600;
+        color: #4a148c;
+    }
+
+    .btn-primary {
+        background-color: #7e57c2;
+        border-color: #7e57c2;
+        font-weight: 600;
+        width: 100%;
+    }
+
+        .btn-primary:hover {
+            background-color: #5e35b1;
+            border-color: #5e35b1;
+        }
+</style>
+
+<div class="edit-container">
+    <h2>Editar Rol</h2>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(m => m.RolID)
+
+        <div class="form-group mb-3">
+            @Html.LabelFor(m => m.NombreRol)
+            @Html.TextBoxFor(m => m.NombreRol, new { @class = "form-control", placeholder = "Nombre del Rol" })
+            @Html.ValidationMessageFor(m => m.NombreRol, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group mb-3">
+            @Html.LabelFor(m => m.Descripcion)
+            @Html.TextBoxFor(m => m.Descripcion, new { @class = "form-control", placeholder = "Descripción" })
+            @Html.ValidationMessageFor(m => m.Descripcion, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-check mb-4">
+            @Html.CheckBoxFor(m => m.Estado, new { @class = "form-check-input", id = "Estado" })
+            <label class="form-check-label" for="Estado">Activo</label>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+    }
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

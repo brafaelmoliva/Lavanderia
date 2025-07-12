@@ -1,0 +1,36 @@
+﻿@model Lavanderia.Models.Distrito
+
+@{
+    ViewBag.Title = "Nuevo Distrito";
+}
+
+<h2 style="text-align: center; margin-bottom: 30px;">Nuevo Distrito</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-container">
+        <div class="form-group">
+            @Html.LabelFor(m => m.NombreDistrito)
+            @Html.TextBoxFor(m => m.NombreDistrito, new { @class = "form-control" })
+            @Html.ValidationMessageFor(m => m.NombreDistrito, "", new { @class = "text-danger" })
+        </div>
+
+        <button type="submit" class="btn btn-primary mt-3">Guardar</button>
+        @Html.ActionLink("Cancelar", "Index", null, new { @class = "btn btn-secondary ml-2 mt-3" })
+    </div>
+}
+
+@section Styles {
+    <style>
+        .form-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            max-width: 600px;
+            margin: 0 auto 40px auto;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+    </style>
+}

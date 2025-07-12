@@ -1,0 +1,179 @@
+﻿@model IEnumerable<Lavanderia.Models.Empleado>
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Empleados";
+}
+
+@section Styles {
+    <style>
+        body {
+            background-color: white !important;
+            padding: 40px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding-left: 200px;
+            padding-right: 10px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #6f42c1;
+            font-weight: bold;
+            margin-bottom: 2rem;
+        }
+
+        .form-inline {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 1.5rem;
+        }
+
+            .form-inline .form-control {
+                margin-right: 10px;
+            }
+
+        .table {
+            background-color: #f3e5f5;
+            border-radius: 8px;
+            overflow: hidden;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+            .table thead {
+                background-color: #9b59b6;
+                color: white;
+            }
+
+        .table-striped tbody tr:nth-child(odd) {
+            background-color: #f9f9f9;
+        }
+
+        .btn-primary {
+            background-color: #7e57c2;
+            border-color: #7e57c2;
+            font-weight: 600;
+        }
+
+        .btn-secondary {
+            font-weight: 600;
+        }
+
+        p {
+            text-align: center;
+            margin-top: 1.5rem;
+        }
+    </style>
+}
+
+<h2>Empleados</h2>
+
+<form method="get" class="form-inline mb-3">
+    <input type="text" name="filtro" class="form-control mr-2" placeholder="Buscar por DNI, Nombre o Apellido" value="@Request.QueryString["filtro"]" />
+    <button type="submit" class="btn btn-primary">Buscar</button>
+    <a href="@Url.Action("Index", "Empleado")" class="btn btn-secondary ml-2">Limpiar</a>
+</form>
+
+<p>@Html.ActionLink("Nuevo Empleado", "Create", null, new { @class = "btn btn-success" })</p>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Apellido</th>
+            <th>DNI</th>
+            <th>Teléfono</th>
+            <th>Hora Entrada</th>
+            <th>Hora Salida</th>
+            <th>SucursalID</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var emp in Model)
+        {
+            <tr>
+                <td>@emp.Nombre</td>
+                <td>@emp.Apellido</td>
+                <td>@emp.DNI</td>
+                <td>@emp.Numero</td>
+                <td>@emp.HoraEntrada</td>
+                <td>@emp.HoraSalida</td>
+                <td>@emp.SucursalID</td>
+                <td>@(emp.Estado ? "Activo" : "Inactivo")</td>
+                <td>
+                    @Html.ActionLink("Editar", "Edit", new { id = emp.EmpleadoID }) |
+                    <a href="#" onclick="mostrarConfirmacion(@emp.EmpleadoID, 'eliminar'); return false;">Eliminar</a>
+                    @if (!emp.Estado)
+                    {
+                        @: | <a href="#" onclick="mostrarConfirmacion(@emp.EmpleadoID, 'habilitar'); return false;">Habilitar</a>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmModalLabel">Confirmación</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="modalMensaje">
+                ¿Estás seguro?
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="btnConfirmar" class="btn btn-danger">Sí</button>
+                <button type="button" id="btnCancelar" class="btn btn-secondary">No</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        $(function () {
+            let accionId = 0;
+            let accionTipo = "";
+
+            window.mostrarConfirmacion = function (id, tipo) {
+                accionId = id;
+                accionTipo = tipo;
+
+                let mensaje = tipo === "eliminar"
+                    ? "¿Estás seguro de que deseas eliminar este empleado?"
+                    : "¿Deseas habilitar este empleado?";
+
+                $("#modalMensaje").text(mensaje);
+                $("#confirmModal").modal("show");
+            };
+
+            $("#btnConfirmar").click(function () {
+                if (accionTipo === "eliminar") {
+                    $.post('@Url.Action("EliminarEmpleadoAjax", "Empleado")', { id: accionId })
+                        .done(() => location.reload())
+                        .fail((xhr) => alert("Error al eliminar:\n" + xhr.responseText));
+                } else if (accionTipo === "habilitar") {
+                    $.post('@Url.Action("HabilitarEmpleadoAjax", "Empleado")', { id: accionId })
+                        .done(() => location.reload())
+                        .fail((xhr) => alert("Error al habilitar:\n" + xhr.responseText));
+                }
+
+                $("#confirmModal").modal("hide");
+            });
+
+            $("#btnCancelar, .close").click(function () {
+                $("#confirmModal").modal("hide");
+            });
+        });
+    </script>
+}
