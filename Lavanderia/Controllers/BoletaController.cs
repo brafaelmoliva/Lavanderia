@@ -75,7 +75,20 @@ namespace Lavanderia.Controllers
             _repo.RegistrarBoletaConDetalles(boleta);
 
             // Redirigir tras registro exitoso
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Boleta");
         }
+
+        public ActionResult Index()
+        {
+            var boletas = _repo.ObtenerTodas();
+            return View(boletas);
+        }
+
+        public ActionResult Detalle(int id)
+        {
+            var detalles = _repo.VerDetalle(id);
+            return View(detalles);
+        }
+
     }
 }

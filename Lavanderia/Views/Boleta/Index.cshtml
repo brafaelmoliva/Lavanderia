@@ -1,8 +1,7 @@
-﻿@model IEnumerable<Lavanderia.Models.Boleta>
+﻿@model IEnumerable<Lavanderia.Models.BoletaResumen>
 
 @{
-    Layout = "~/Views/Shared/_Layout.cshtml";
-    ViewBag.Title = "Boletas";
+    ViewBag.Title = "Boletas Registradas";
 }
 
 @section Styles {
@@ -22,22 +21,17 @@
             margin-bottom: 2rem;
         }
 
-        .form-inline {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin-bottom: 1.5rem;
+        .btn-success {
+            font-weight: 600;
+            display: block;
+            margin: 0 auto 1.5rem auto;
         }
-
-            .form-inline .form-control {
-                margin-right: 10px;
-            }
 
         .table {
             background-color: #f3e5f5;
             border-radius: 8px;
             overflow: hidden;
-            max-width: 900px;
+            max-width: 1000px;
             margin: 0 auto;
         }
 
@@ -50,42 +44,27 @@
             background-color: #f9f9f9;
         }
 
-        .btn-primary {
-            background-color: #7e57c2;
-            border-color: #7e57c2;
+        .btn-info {
+            background-color: #5a68c7;
+            border-color: #5a68c7;
             font-weight: 600;
-        }
-
-        .btn-secondary {
-            font-weight: 600;
-        }
-
-        p {
-            text-align: center;
-            margin-top: 1.5rem;
         }
     </style>
 }
 
-<h2>Boletas</h2>
-
-<form method="get" class="form-inline mb-3">
-    <input type="text" name="filtro" class="form-control mr-2" placeholder="Buscar por Cliente o Empleado" value="@Request.QueryString["filtro"]" />
-    <button type="submit" class="btn btn-primary">Buscar</button>
-    <a href="@Url.Action("Index", "Boleta")" class="btn btn-secondary ml-2">Limpiar</a>
-</form>
+<h2>Boletas Registradas</h2>
 
 <p>
     @Html.ActionLink("Registrar Nueva Boleta", "Create", "Boleta", null, new { @class = "btn btn-success" })
 </p>
 
-<table class="table table-striped">
+<table class="table table-bordered table-striped">
     <thead>
         <tr>
-            <th>BoletaID</th>
-            <th>ClienteID</th>
-            <th>EmpleadoID</th>
-            <th>SucursalID</th>
+            <th>ID</th>
+            <th>Cliente</th>
+            <th>Empleado</th>
+            <th>Sucursal</th>
             <th>Fecha Emisión</th>
             <th>Fecha Entrega</th>
             <th>Total</th>
@@ -93,18 +72,18 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var boleta in Model)
+        @foreach (var b in Model)
         {
             <tr>
-                <td>@boleta.BoletaID</td>
-                <td>@boleta.ClienteID</td>
-                <td>@boleta.EmpleadoID</td>
-                <td>@boleta.SucursalID</td>
-                <td>@boleta.FechaEmision.ToString("yyyy-MM-dd")</td>
-                <td>@boleta.FechaEntrega.ToString("yyyy-MM-dd")</td>
-                <td>@boleta.Total.ToString("C")</td>
+                <td>@b.BoletaID</td>
+                <td>@b.NombreCliente</td>
+                <td>@b.NombreEmpleado</td>
+                <td>@b.NombreSucursal</td>
+                <td>@b.FechaEmision.ToShortDateString()</td>
+                <td>@b.FechaEntrega.ToShortDateString()</td>
+                <td>S/ @b.Total.ToString("F2")</td>
                 <td>
-                    @Html.ActionLink("Ver Detalle", "Detalle", "Boleta", new { id = boleta.BoletaID }, new { @class = "btn btn-info btn-sm" })
+                    @Html.ActionLink("Ver", "Detalle", new { id = b.BoletaID }, new { @class = "btn btn-info btn-sm" })
                 </td>
             </tr>
         }

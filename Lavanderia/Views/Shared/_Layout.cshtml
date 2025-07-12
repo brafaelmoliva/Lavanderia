@@ -9,7 +9,6 @@
     @RenderSection("Styles", required: false)
 
     <style>
-        /* Variables de color */
         :root {
             --lavender-light: #9b59b6;
             --lavender-dark: #8e44ad;
@@ -20,11 +19,9 @@
         body {
             margin: 0;
             font-family: 'Segoe UI', Tahoma, sans-serif;
-            background-color: white; /* Cambiado a blanco */
+            background-color: white;
         }
 
-
-        /* Sidebar vertical */
         .sidebar {
             position: fixed;
             top: 0;
@@ -40,46 +37,43 @@
             flex-direction: column;
         }
 
-        .sidebar .navbar-brand {
-            padding-left: 1rem;
-            font-size: 1.5rem;
-            font-weight: bold;
-            margin-bottom: 2rem;
-        }
+            .sidebar .navbar-brand {
+                padding-left: 1rem;
+                font-size: 1.5rem;
+                font-weight: bold;
+                margin-bottom: 2rem;
+            }
 
-        .sidebar nav ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            flex-grow: 1;
-        }
-        .sidebar nav ul li a {
-            display: block;
-            padding: 12px 1.5rem;
-            color: var(--white);
-            text-decoration: none;
-        }
-        .sidebar nav ul li a:hover, .sidebar nav ul li a.active {
-            background: var(--lavender-hover);
-        }
+            .sidebar nav ul {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+                flex-grow: 1;
+            }
 
-        .sidebar footer {
-            padding: 1rem;
-            font-size: 0.8rem;
-            text-align: center;
-            color: rgba(255,255,255,0.7);
-        }
+                .sidebar nav ul li a {
+                    display: block;
+                    padding: 12px 1.5rem;
+                    color: var(--white);
+                    text-decoration: none;
+                }
 
-        /* Contenido principal con margen lateral para sidebar */
-        
+                    .sidebar nav ul li a:hover,
+                    .sidebar nav ul li a.active {
+                        background: var(--lavender-hover);
+                    }
 
+            .sidebar footer {
+                padding: 1rem;
+                font-size: 0.8rem;
+                text-align: center;
+                color: rgba(255,255,255,0.7);
+            }
 
-        /* Botón hamburguesa oculto por defecto */
         .hamburger-btn {
             display: none;
         }
 
-        /* Media query para pantallas pequeñas */
         @@media (max-width: 768px) {
             .sidebar {
                 display: none;
@@ -88,12 +82,15 @@
                 flex-direction: column;
                 position: relative;
             }
-            .sidebar.show {
-                display: flex;
-            }
+
+                .sidebar.show {
+                    display: flex;
+                }
+
             .main-content {
                 margin-left: 0 !important;
             }
+
             .hamburger-btn {
                 display: block;
                 position: fixed;
@@ -116,22 +113,17 @@
         <button class="hamburger-btn" onclick="toggleSidebar()">☰</button>
 
         <aside class="sidebar" id="sidebar">
-            @Html.ActionLink("MissLavanda", "Index", "Home", null, new { @class = "navbar-brand" })
+            @Html.ActionLink("MissLavanda", "Index", "Home", null, new { @class = "navbar-brand ajax-link" })
 
             <nav>
                 <ul>
-                    <li>@Html.ActionLink("Cliente", "Index", "Cliente", null, new { @class = "nav-link" })</li>
-                    <li>@Html.ActionLink("Empleado", "Index", "Empleado", null, new { @class = "nav-link" })</li>
-                    <li>@Html.ActionLink("Distrito", "Index", "Distrito", null, new { @class = "nav-link" })</li>
-                    <li>@Html.ActionLink("Sucursal", "Index", "Sucursal", null, new { @class = "nav-link" })</li>
-                    <li>@Html.ActionLink("Rol", "Index", "Rol", null, new { @class = "nav-link" })</li>
-                    <li>@Html.ActionLink("Usuario", "Index", "Usuario", null, new { @class = "nav-link" })</li>
-                    <li>@Html.ActionLink("Boleta", "Create", "Boleta", null, new { @class = "nav-link" })</li>
-
-
-
-
-
+                    <li>@Html.ActionLink("Cliente", "Index", "Cliente", null, new { @class = "nav-link ajax-link" })</li>
+                    <li>@Html.ActionLink("Empleado", "Index", "Empleado", null, new { @class = "nav-link ajax-link" })</li>
+                    <li>@Html.ActionLink("Distrito", "Index", "Distrito", null, new { @class = "nav-link ajax-link" })</li>
+                    <li>@Html.ActionLink("Sucursal", "Index", "Sucursal", null, new { @class = "nav-link ajax-link" })</li>
+                    <li>@Html.ActionLink("Rol", "Index", "Rol", null, new { @class = "nav-link ajax-link" })</li>
+                    <li>@Html.ActionLink("Usuario", "Index", "Usuario", null, new { @class = "nav-link ajax-link" })</li>
+                    <li>@Html.ActionLink("Boleta", "Index", "Boleta", null, new { @class = "nav-link ajax-link" })</li>
                 </ul>
             </nav>
 
@@ -140,7 +132,7 @@
     }
 
     <div class="main-content @(Session["UsuarioID"] != null ? "" : "no-sidebar")">
-        <div class="container">
+        <div class="container" id="contenido-principal">
             @RenderBody()
         </div>
     </div>
@@ -153,6 +145,21 @@
         function toggleSidebar() {
             document.getElementById('sidebar').classList.toggle('show');
         }
+
+        // Navegación AJAX
+        $(document).on("click", "a.ajax-link", function (e) {
+            e.preventDefault();
+
+            var url = $(this).attr("href");
+            if (!url || url === "#") return;
+
+            $("#contenido-principal").load(url);
+            window.history.pushState(null, '', url);
+        });
+
+        window.onpopstate = function () {
+            $("#contenido-principal").load(location.href);
+        };
     </script>
 </body>
 </html>

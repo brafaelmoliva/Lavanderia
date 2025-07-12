@@ -61,4 +61,21 @@ public class BoletaRepository
             }
         }
     }
+
+    public IEnumerable<BoletaResumen> ObtenerTodas()
+    {
+        using (var conexion = new SqlConnection(connectionString))
+        {
+            return conexion.Query<BoletaResumen>("MostrarTodasBoletas", commandType: CommandType.StoredProcedure);
+        }
+    }
+
+    public IEnumerable<VistaDetalleBoleta> VerDetalle(int boletaId)
+    {
+        using (var conexion = new SqlConnection(connectionString))
+        {
+            return conexion.Query<VistaDetalleBoleta>("VerDetalleBoleta", new { BoletaID = boletaId }, commandType: CommandType.StoredProcedure);
+        }
+    }
+
 }
